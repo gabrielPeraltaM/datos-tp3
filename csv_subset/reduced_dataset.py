@@ -2,11 +2,7 @@ import sklearn.utils.random as sk_random
 import pandas as pd
 from typing import List
 
-
-GROUP_NUMBER = 11
-DATASET_FILE_PATH = "./data/train_data.csv"
-OUTPUT_FILE_PATH = "./data/group11_data.csv"
-CHUNK_SIZE = 100000
+from cli_arguments import parser
 
 
 def get_seed_for_group(group_number: int) -> int:
@@ -29,14 +25,22 @@ def read_csv_and_create_subset(file: str, output_file: str, filtering_indexes: L
 
 
 if __name__ == "__main__":
-    total_number_of_rows = read_csv_in_chunks_and_count(file=DATASET_FILE_PATH, chunk_size=CHUNK_SIZE)
-    number_of_sample_rows = total_number_of_rows * 0.05
+    args = parser.parse_args()
+
+    input_file = args['input']
+    output_file = args['output']
+    percentage = args['percentage']
+    chunk_size = args['chunk_size']
+    group_number = args['group_number']
+
+    total_number_of_rows = read_csv_in_chunks_and_count(file=input_file, chunk_size=chunk_size)
+    number_of_sample_rows = total_number_of_rows * percentage
 
     sample = sk_random.sample_without_replacement(
         total_number_of_rows,
         number_of_sample_rows,
-        random_state=get_seed_for_group(GROUP_NUMBER)
+        random_state=get_seed_for_group(group_number)
     )
 
-    read_csv_and_create_subset(file=DATASET_FILE_PATH, output_file=OUTPUT_FILE_PATH,
-                               filtering_indexes=sample, chunk_size=CHUNK_SIZE)
+    read_csv_and_create_subset(file=input_file, output_file=output_file,
+                               filtering_indexes=sample, chunk_size=chunk_size)
