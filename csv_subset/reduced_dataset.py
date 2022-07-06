@@ -19,13 +19,16 @@ def read_csv_in_chunks_and_count(file: str, chunk_size: int):
 
 
 def read_csv_and_create_subset(file: str, output_file: str, filtering_indexes: List[int], chunk_size: int):
+    count = 0
     for chunk in pd.read_csv(filepath_or_buffer=file, chunksize=chunk_size):
         chunk = chunk[chunk.index.isin(filtering_indexes)]
-        chunk.to_csv(output_file, header=True, mode='a')
+        count += len(chunk)
+        print(count)
+        chunk.to_csv(output_file,  mode='a', index=False)
 
 
 if __name__ == "__main__":
-    args = parser.parse_args()
+    args = vars(parser.parse_args())
 
     input_file = args['input']
     output_file = args['output']

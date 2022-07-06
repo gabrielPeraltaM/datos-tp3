@@ -10,5 +10,3 @@ parser.add_argument("--output", type=str, dest="output", help="Output file with 
 parser.add_argument("--percentage", dest="percentage",
                     type=float, help="Percentage of the total data to use in the subset",
                     required=True)
-parser.add_argument("--size", type=int, dest="size",
-                    help="Optional size of the file.If not specified, the script calculates it, but takes longer to finish")
